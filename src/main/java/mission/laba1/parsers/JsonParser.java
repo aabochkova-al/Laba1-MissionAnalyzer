@@ -8,6 +8,6 @@ package mission.laba1.parsers;
  *
  * @author aleksandra
  */
-public class JsonParser {
+public class JsonParser implements MissionParser {
     
 }
