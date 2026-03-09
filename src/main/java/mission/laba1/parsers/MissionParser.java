@@ -4,10 +4,12 @@
  */
 package mission.laba1.parsers;
 
+import mission.laba1.missionanalyzer.Mission;
+
 /**
  *
  * @author aleksandra
  */
 public interface MissionParser {
-    
+    Mission parse(String filepath);
 }
