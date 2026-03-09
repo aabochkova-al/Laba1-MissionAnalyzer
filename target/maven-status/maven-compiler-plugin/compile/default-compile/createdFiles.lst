@@ -1,0 +1,10 @@
+mission/laba1/missionanalyzer/Mission.class
+mission/laba1/parsers/ParserFactory.class
+mission/laba1/parsers/JsonParser.class
+mission/laba1/missionanalyzer/Laba1MissionAnalyzer.class
+mission/laba1/missionanalyzer/Curse.class
+mission/laba1/parsers/TxtParser.class
+mission/laba1/parsers/MissionParser.class
+mission/laba1/missionanalyzer/Technique.class
+mission/laba1/missionanalyzer/Sorcer.class
+mission/laba1/parsers/XmlParser.class
