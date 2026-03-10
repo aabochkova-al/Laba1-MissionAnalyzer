@@ -37,6 +37,12 @@ public class TxtParser implements MissionParser{
         if(dmgStr != null){
             mission.setDamageCost(Integer.parseInt(dmgStr));
         }
+        
+        String note = data.get("note");
+        if(note != null){
+            mission.setNotes(note);
+        }
+        
         Curse curse = new Curse();
         curse.setName(data.get("curse.name"));
         curse.setThreatLevel(data.get("curse.threatLevel"));

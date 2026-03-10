@@ -4,6 +4,7 @@
  */
 package mission.laba1.missionanalyzer;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class Mission {
     private String location;
     private String outcome;
     private int damageCost;
+    private String notes;
     
     private Curse curse; //ссылка на пустой объект
     private List<Sorcer> sorcerers;
@@ -51,6 +53,14 @@ public class Mission {
     
     public List<Technique> getTechniques() { return techniques; }
     public void setTechniques(List<Technique> techniques) { this.techniques = techniques; }
+    
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
+    
+    @JsonSetter("comment")
+    public void setComment(String comment){
+        this.notes=comment;
+    }
     
     
 }
