@@ -4,10 +4,21 @@
  */
 package mission.laba1.parsers;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import java.io.File;
+import java.io.IOException;
+import mission.laba1.missionanalyzer.Mission;
+
 /**
  *
  * @author aleksandra
  */
 public class XmlParser implements MissionParser{
+    private XmlMapper mapper = new XmlMapper();
     
+    @Override
+    public Mission parse(String filepath) throws IOException {
+       File file = new File(filepath);
+       return mapper.readValue(file, Mission.class);
+    }
 }
