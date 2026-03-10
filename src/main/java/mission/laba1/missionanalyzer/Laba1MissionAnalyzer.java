@@ -71,6 +71,9 @@ public class Laba1MissionAnalyzer {
                         }
                     }
                 }
+                if (m.getNotes() != null && !m.getNotes().isEmpty()) {
+                    System.out.println("Примечание: " + m.getNotes());
+                }
             }catch (Exception e){
                 System.out.println("Ошибка: " + e.getMessage());
             }

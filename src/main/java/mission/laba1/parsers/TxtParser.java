@@ -109,7 +109,7 @@ public class TxtParser implements MissionParser{
             t.setName(name);
             t.setOwner(data.get("technique[" + index + "].owner"));
             t.setType(data.get("technique[" + index + "].type"));
-            String dmgStr = data.get("technique[" + index + "].name");
+            String dmgStr = data.get("technique[" + index + "].damage");
             if(dmgStr != null){
                 t.setDamage(Integer.parseInt(dmgStr));
             }
