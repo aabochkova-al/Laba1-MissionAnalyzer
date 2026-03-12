@@ -40,43 +40,50 @@ public class Laba1MissionAnalyzer {
                     continue;
                 }
                 
-                Mission m = parser.parse(filepath);
-                
-                System.out.println("\n--Информация по миссии--");
-                System.out.println("ID: " + m.getMissionId());
-                System.out.println("Дата: " + m.getDate());
-                System.out.println("Место: " + m.getLocation());
-                System.out.println("Результат: " + m.getOutcome());
-                if(m.getDamageCost() != null){
-                    System.out.println("Ущерб: " + m.getDamageCost() + "йен");
-                }
-                System.out.println("\n--- Цель ---");
-                if (m.getCurse() != null) {
-                    System.out.println("Проклятие: " + m.getCurse().getName());
-                    System.out.println("Уровень: " + m.getCurse().getThreatLevel());
-                }
-                System.out.println("\n--- Участники ---");
-                if (m.getSorcerers() != null) {
-                    for (Sorcer s : m.getSorcerers()) {
-                        System.out.println(s.getName() + " (" + s.getRank() + ")");
+                try {
+                    Mission m = parser.parse(filepath);
+                    m.validateOrThrow();
+                    System.out.println("✓ Данные миссии валидны");
+                    
+                    System.out.println("\n--Информация по миссии--");
+                    System.out.println("ID: " + m.getMissionId());
+                    System.out.println("Дата: " + m.getDate());
+                    System.out.println("Место: " + m.getLocation());
+                    System.out.println("Результат: " + m.getOutcome());
+                    if(m.getDamageCost() != null){
+                        System.out.println("Ущерб: " + m.getDamageCost() + "йен");
                     }
-                }
-                System.out.println("\n--- Техники ---");
-                if (m.getTechniques() != null) {
-                    for (Technique t : m.getTechniques()) {
-                        System.out.println(t.getName() + " - тип: " + t.getType());
-                        System.out.println("  Владелец: " + t.getOwner());
-                        if (t.getDamage() != null) {
-                            System.out.println("  Урон: " + t.getDamage());
+                    System.out.println("\n--- Цель ---");
+                    if (m.getCurse() != null) {
+                        System.out.println("Проклятие: " + m.getCurse().getName());
+                        System.out.println("Уровень: " + m.getCurse().getThreatLevel());
+                    }
+                    System.out.println("\n--- Участники ---");
+                    if (m.getSorcerers() != null) {
+                        for (Sorcer s : m.getSorcerers()) {
+                            System.out.println(s.getName() + " (" + s.getRank() + ")");
                         }
                     }
+                    System.out.println("\n--- Техники ---");
+                    if (m.getTechniques() != null) {
+                        for (Technique t : m.getTechniques()) {
+                            System.out.println(t.getName() + " - тип: " + t.getType());
+                            System.out.println("  Владелец: " + t.getOwner());
+                            if (t.getDamage() != null) {
+                                System.out.println("  Урон: " + t.getDamage());
+                            }
+                        }
+                    }
+                    if (m.getNotes() != null && !m.getNotes().isEmpty()) {
+                        System.out.println("Примечание: " + m.getNotes());
+                    }
+                }catch (Exception e){
+                    System.out.println("Ошибка: " + e.getMessage());
                 }
-                if (m.getNotes() != null && !m.getNotes().isEmpty()) {
-                    System.out.println("Примечание: " + m.getNotes());
+                } catch (IllegalStateException e) {
+                    System.out.println("✗ Ошибка в данных: " + e.getMessage());
                 }
-            }catch (Exception e){
-                System.out.println("Ошибка: " + e.getMessage());
-            }
+                
         }
         scanner.close();
     }

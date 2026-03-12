@@ -62,5 +62,29 @@ public class Mission {
         this.notes=comment;
     }
     
-    
+    public void validateOrThrow() throws IllegalStateException{
+        // Проверка: есть техники, но нет магов и что владелец техники есть в списке участников
+        if ((techniques != null && !techniques.isEmpty()) && 
+            (sorcerers == null || sorcerers.isEmpty())) {
+            throw new IllegalStateException("Миссия содержит техники, но не содержит магов!");
+        }
+        
+        if (techniques != null && sorcerers != null) {
+            for (Technique t : techniques) {
+                boolean ownerFound = false;
+                for (Sorcer s : sorcerers) {
+                    if (s.getName().equals(t.getOwner())) {
+                        ownerFound = true;
+                        break;
+                    }
+                }
+                if (!ownerFound) {
+                    throw new IllegalStateException(
+                        "Владелец техники '" + t.getName() + "' (" + t.getOwner() + 
+                        ") не найден в списке магов!"
+                    );
+                }
+            }
+        }
+    }
 }
