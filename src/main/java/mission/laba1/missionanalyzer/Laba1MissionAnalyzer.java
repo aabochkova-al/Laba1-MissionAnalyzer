@@ -40,10 +40,9 @@ public class Laba1MissionAnalyzer {
                     continue;
                 }
                 
-                try {
                     Mission m = parser.parse(filepath);
                     m.validateOrThrow();
-                    System.out.println("✓ Данные миссии валидны");
+                    System.out.println(" Данные миссии валидны");
                     
                     System.out.println("\n--Информация по миссии--");
                     System.out.println("ID: " + m.getMissionId());
@@ -73,6 +72,8 @@ public class Laba1MissionAnalyzer {
                                 System.out.println("  Урон: " + t.getDamage());
                             }
                         }
+                    } else{ 
+                            System.out.println("  Нет валидных техник");
                     }
                     if (m.getNotes() != null && !m.getNotes().isEmpty()) {
                         System.out.println("Примечание: " + m.getNotes());
@@ -80,10 +81,6 @@ public class Laba1MissionAnalyzer {
                 }catch (Exception e){
                     System.out.println("Ошибка: " + e.getMessage());
                 }
-                } catch (IllegalStateException e) {
-                    System.out.println("✗ Ошибка в данных: " + e.getMessage());
-                }
-                
         }
         scanner.close();
     }

@@ -70,6 +70,8 @@ public class Mission {
         }
         
         if (techniques != null && sorcerers != null) {
+            List<Technique> validTechniques = new ArrayList<>();
+            List<String> errors = new ArrayList<>();
             for (Technique t : techniques) {
                 boolean ownerFound = false;
                 for (Sorcer s : sorcerers) {
@@ -78,13 +80,20 @@ public class Mission {
                         break;
                     }
                 }
-                if (!ownerFound) {
-                    throw new IllegalStateException(
-                        "Владелец техники '" + t.getName() + "' (" + t.getOwner() + 
-                        ") не найден в списке магов!"
-                    );
+                if  (ownerFound) {
+                    validTechniques.add(t); // оставляем только валидные техники
+                } else {
+                    errors.add("Техника '" + t.getName() + "' (владелец: " + t.getOwner() + ") пропущена - владелец не найден");
                 }
             }
-        }
+            this.techniques = validTechniques;
+            if (!errors.isEmpty()) {
+                System.out.println("\nПредупреждение: ");
+                for (String error : errors) {
+                    System.out.println("  - " + error);
+                }
+                System.out.println();
+            }
+        } 
     }
 }
