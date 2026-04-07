@@ -60,7 +60,7 @@ public class Laba1MissionAnalyzer {
                     System.out.println("\n--- Участники ---");
                     if (m.getSorcerers() != null) {
                         for (Sorcer s : m.getSorcerers()) {
-                            System.out.println(s.getName() + " (" + s.getRank() + ")" + s.getNickname());
+                            System.out.println(s.getName() + " (" + s.getRank() + ")");
                         }
                     }
                     System.out.println("\n--- Техники ---");

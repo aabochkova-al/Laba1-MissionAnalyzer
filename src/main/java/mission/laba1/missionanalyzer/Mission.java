@@ -63,6 +63,9 @@ public class Mission {
     }
     
     public void validateOrThrow() throws IllegalStateException{
+        if (missionId == null || missionId.isEmpty()) {
+            throw new IllegalStateException("Mission ID обязателен!");
+        }
         // Проверка: есть техники, но нет магов и что владелец техники есть в списке участников
         if ((techniques != null && !techniques.isEmpty()) && 
             (sorcerers == null || sorcerers.isEmpty())) {
