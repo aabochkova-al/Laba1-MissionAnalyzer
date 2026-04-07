@@ -11,10 +11,14 @@ package mission.laba1.missionanalyzer;
 public class Sorcer {
     private String name;
     private String rank;
+    private String nickname;
     
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     
     public String getRank() { return rank; }
     public void setRank(String rank) { this.rank = rank; }
+    
+    public String getNickname() { return nickname; }
+    public void setNickname(String nickname) { this.nickname = nickname; }
 }

@@ -89,6 +89,7 @@ public class TxtParser implements MissionParser{
             Sorcer s = new Sorcer();
             s.setName(name);
             s.setRank(data.get("sorcerer[" + index + "].rank"));
+            s.setNickname(data.get("sorcerer[" + index + "].nickname"));
             sorcerers.add(s);
             index++;
         }
