@@ -4,17 +4,20 @@
  */
 package mission.laba1.missionanalyzer;
 
+import mission.laba1.ENUM.SorcererRank;
+
 /**
  *
  * @author aleksandra
  */
 public class Sorcer {
     private String name;
-    private String rank;
+    private SorcererRank rank;
     
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     
-    public String getRank() { return rank; }
-    public void setRank(String rank) { this.rank = rank; }
+    public SorcererRank getRank() { return rank; }
+    public void setRank(SorcererRank rank) { this.rank = rank; }
+    public void setRank(String rank) { this.rank = SorcererRank.fromString(rank); }
 }

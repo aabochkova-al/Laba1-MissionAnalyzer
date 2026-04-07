@@ -4,25 +4,28 @@
  */
 package mission.laba1.missionanalyzer;
 
+import mission.laba1.ENUM.TechniqueType;
+
 /**
  *
  * @author aleksandra
  */
 public class Technique {
     private String name;
-    private String type;
+    private TechniqueType type;
     private String owner;
-    private int damage;
+    private Integer damage;
     
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
+    public TechniqueType getType() { return type; }
+    public void setType(TechniqueType type) { this.type = type; }
+    public void setType(String type) { this.type = TechniqueType.fromString(type); }
     
     public String getOwner() { return owner; }
     public void setOwner(String owner) { this.owner = owner; }
     
     public Integer getDamage() { return damage; }
-    public void setDamage(int damage) { this.damage = damage; }
+    public void setDamage(Integer damage) { this.damage = damage; }
 }
