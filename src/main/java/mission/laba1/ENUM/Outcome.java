@@ -9,8 +9,10 @@ package mission.laba1.ENUM;
  * @author aleksandra
  */
 public enum Outcome {
-    SUCCSESS,
+    SUCCESS,
     FAILURE,
+    PARTIAL_SUCCESS,
+    ABORTED,
     UNKNOWN;
     
     public static Outcome fromString(String value){

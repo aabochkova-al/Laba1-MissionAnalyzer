@@ -9,5 +9,18 @@ package mission.laba1.ENUM;
  * @author aleksandra
  */
 public enum TechniqueType {
+    INNATE,      
+    WEAPON,      
+    SHIKIGAMI,   
+    BODY,     
+    UNKNOWN;
     
+    public static TechniqueType fromString(String value) {
+        if (value == null) return UNKNOWN;
+        try {
+            return TechniqueType.valueOf(value);
+        } catch (IllegalArgumentException e) {
+            return UNKNOWN;
+        }
+    }
 }

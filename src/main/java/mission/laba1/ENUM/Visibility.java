@@ -9,5 +9,18 @@ package mission.laba1.ENUM;
  * @author aleksandra
  */
 public enum Visibility {
+    LOW,       
+    MEDIUM,  
+    HIGH,       
+    ZERO,      
+    UNKNOWN;
     
+    public static Visibility fromString(String value) {
+        if (value == null) return UNKNOWN;
+        try {
+            return Visibility.valueOf(value);
+        } catch (IllegalArgumentException e) {
+            return UNKNOWN;
+        }
+    }
 }

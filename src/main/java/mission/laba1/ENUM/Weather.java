@@ -9,5 +9,21 @@ package mission.laba1.ENUM;
  * @author aleksandra
  */
 public enum Weather {
+    CLEAR,         
+    CLOUDY,        
+    RAIN,          
+    HEAVY_RAIN,     
+    STORM,         
+    FOG,           
+    SNOW,          
+    UNKNOWN;
     
+    public static Weather fromString(String value) {
+        if (value == null) return UNKNOWN;
+        try {
+            return Weather.valueOf(value);
+        } catch (IllegalArgumentException e) {
+            return UNKNOWN;
+        }
+    }
 }

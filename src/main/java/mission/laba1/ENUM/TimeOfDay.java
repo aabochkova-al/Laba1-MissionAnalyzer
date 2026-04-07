@@ -9,5 +9,18 @@ package mission.laba1.ENUM;
  * @author aleksandra
  */
 public enum TimeOfDay {
+    MORNING,    
+    AFTERNOON,  
+    EVENING,    
+    NIGHT,       
+    UNKNOWN;
     
+    public static TimeOfDay fromString(String value) {
+        if (value == null) return UNKNOWN;
+        try {
+            return TimeOfDay.valueOf(value);
+        } catch (IllegalArgumentException e) {
+            return UNKNOWN;
+        }
+    }
 }

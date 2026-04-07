@@ -9,5 +9,17 @@ package mission.laba1.ENUM;
  * @author aleksandra
  */
 public enum EscalationRisk {
+    LOW,
+    MEDIUM,    
+    HIGH,
+    UNKNOWN;
     
+    public static EscalationRisk fromString(String value) {
+        if (value == null) return UNKNOWN;
+        try {
+            return EscalationRisk.valueOf(value);
+        } catch (IllegalArgumentException e) {
+            return UNKNOWN;
+        }
+    }
 }

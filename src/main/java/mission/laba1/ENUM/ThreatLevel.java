@@ -9,5 +9,18 @@ package mission.laba1.ENUM;
  * @author aleksandra
  */
 public enum ThreatLevel {
+    LOW,
+    MEDIUM,
+    HIGH,
+    SPECIAL_GRADE,
+    UNKNOWN;
     
+    public static ThreatLevel fromString(String value) {
+        if (value == null) return UNKNOWN;
+        try {
+            return ThreatLevel.valueOf(value);
+        } catch (IllegalArgumentException e) {
+            return UNKNOWN;
+        }
+    }
 }
