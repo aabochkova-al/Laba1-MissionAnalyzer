@@ -103,6 +103,6 @@ public class NoExtensionParser implements MissionParser {
 
     @Override
     public String getExtension() {
-     return "";    
+     return "none";    
     }
 }

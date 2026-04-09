@@ -24,6 +24,7 @@ public class YamlParser extends BasicParser{
 
     @Override
     public Mission parse(String filepath) throws IOException {
+        
         Yaml yaml = new Yaml();
         try (InputStream input = new FileInputStream(filepath)) {
             Map<String, Object> data = yaml.load(input);

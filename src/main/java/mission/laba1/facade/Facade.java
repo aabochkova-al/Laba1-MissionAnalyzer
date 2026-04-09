@@ -25,6 +25,7 @@ public class Facade {
     private String defaultFormatName;
     
     public Facade(){
+        ParserFactory.setup();
         formatters.put("full", new FullReport());
         formatters.put("usual", new UsualReport());
         defaultFormatName = "full";
@@ -46,9 +47,6 @@ public class Facade {
     
     public Mission analyzeMission(String filepath) throws IOException {
         MissionParser parser = ParserFactory.getParser(filepath);
-        if (parser == null) {
-            throw new IOException("Неподдерживаемый формат файла: " + filepath);
-        }
         
         System.out.println("Парсер: " + parser.getClass().getSimpleName());
         

@@ -6,6 +6,7 @@ package mission.laba1.missionanalyzer;
 
 import java.io.File;
 import java.util.Scanner;
+import mission.laba1.facade.Facade;
 import mission.laba1.parsers.MissionParser;
 import mission.laba1.parsers.ParserFactory;
 
@@ -14,17 +15,32 @@ import mission.laba1.parsers.ParserFactory;
  * @author aleksandra
  */
 public class Laba1MissionAnalyzer {
+    
 
     public static void main(String[] args) {
+        ParserFactory.setup();
+        Facade facade = new Facade();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Добро пожаловать в анализатор миссий!");
         
+        System.out.println("\nКоманды:");
+        System.out.println("  format:full - переключиться на полный отчет");
+        System.out.println("  format:usual - переключиться на краткий отчет");
+        System.out.println("  exit - выход");
+        
+
         while(true){
-            System.out.println("\nВведите путь к файлу для анализа (или введите \"exit\" для выхода): ");
-            String filepath = scanner.nextLine();
+            System.out.println("\nВведите путь к файлу для анализа: ");
+            String filepath = scanner.nextLine().trim();
 
             if(filepath.equals("exit")){
                 break;
+            }
+            
+            if (filepath.startsWith("format:")) {
+                String formatName = filepath.substring(7);
+                facade.setDefaultFormat(formatName);
+                continue;
             }
 
             File file = new File(filepath); 
@@ -33,55 +49,17 @@ public class Laba1MissionAnalyzer {
                 continue;
             }
             
-            try{
-                MissionParser parser = ParserFactory.getParser(filepath);
-                if(parser == null){
-                    System.out.println("Неподдерживаемый файл");
-                    continue;
-                }
-                
-                    Mission m = parser.parse(filepath);
-                    m.validateOrThrow();
-                    System.out.println(" Данные миссии валидны");
-                    
-                    System.out.println("\n--Информация по миссии--");
-                    System.out.println("ID: " + m.getMissionId());
-                    System.out.println("Дата: " + m.getDate());
-                    System.out.println("Место: " + m.getLocation());
-                    System.out.println("Результат: " + m.getOutcome());
-                    if(m.getDamageCost() != null){
-                        System.out.println("Ущерб: " + m.getDamageCost() + "йен");
-                    }
-                    System.out.println("\n--- Цель ---");
-                    if (m.getCurse() != null) {
-                        System.out.println("Проклятие: " + m.getCurse().getName());
-                        System.out.println("Уровень: " + m.getCurse().getThreatLevel());
-                    }
-                    System.out.println("\n--- Участники ---");
-                    if (m.getSorcerers() != null) {
-                        for (Sorcer s : m.getSorcerers()) {
-                            System.out.println(s.getName() + " (" + s.getRank() + ")");
-                        }
-                    }
-                    System.out.println("\n--- Техники ---");
-                    if (m.getTechniques() != null) {
-                        for (Technique t : m.getTechniques()) {
-                            System.out.println(t.getName() + " - тип: " + t.getType());
-                            System.out.println("  Владелец: " + t.getOwner());
-                            if (t.getDamage() != null) {
-                                System.out.println("  Урон: " + t.getDamage());
-                            }
-                        }
-                    } else{ 
-                            System.out.println("  Нет валидных техник");
-                    }
-                    if (m.getNotes() != null && !m.getNotes().isEmpty()) {
-                        System.out.println("Примечание: " + m.getNotes());
-                    }
-                }catch (Exception e){
-                    System.out.println("Ошибка: " + e.getMessage());
-                }
+           try {
+                Mission mission = facade.analyzeMission(filepath);
+                System.out.println("Данные миссии валидны");
+                facade.printReport(mission);
+            } catch (Exception e) {
+                System.out.println("Ошибка: " + e.getMessage());
+            }
         }
+        
+        System.out.println("\nРабота завершена!");
         scanner.close();
     }
+    
 }
