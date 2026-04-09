@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Scanner;
 import mission.laba1.missionanalyzer.Curse;
 import mission.laba1.missionanalyzer.Mission;
+import mission.laba1.missionanalyzer.MissionBuilder;
 import mission.laba1.missionanalyzer.Sorcer;
 import mission.laba1.missionanalyzer.Technique;
 
@@ -20,103 +21,115 @@ import mission.laba1.missionanalyzer.Technique;
  *
  * @author aleksandra
  */
-public class TxtParser implements MissionParser{
+public class TxtParser extends BasicParser{
 
     @Override
     public Mission parse(String filepath) throws IOException {
-        Map<String,String> data = fileToMapEdit(filepath);
+        Map<String,String> firstData = fileToMapEdit(filepath);
         
-        Mission mission = new Mission();
-        
-        mission.setMissionId(data.get("missionId"));
-        mission.setDate(data.get("date"));
-        mission.setLocation(data.get("location"));
-        mission.setOutcome(data.get("outcome"));
-        
-        String dmgStr = data.get("damageCost");
-        if(dmgStr != null){
-            mission.setDamageCost(Integer.parseInt(dmgStr));
+  Map<String, Object> data = new HashMap<>();
+        for (Map.Entry<String, String> entry : firstData.entrySet()) {
+            data.put(entry.getKey(), entry.getValue());
         }
         
-        String note = data.get("note");
-        if(note != null){
-            mission.setNotes(note);
+        if (firstData.containsKey("sorcerer[0].name")) {
+            List<Map<String, String>> sorcerersList = new ArrayList<>();
+            int index = 0;
+            while (firstData.containsKey("sorcerer[" + index + "].name")) {
+                Map<String, String> sorcerData = new HashMap<>();
+                sorcerData.put("name", firstData.get("sorcerer[" + index + "].name"));
+                sorcerData.put("rank", firstData.get("sorcerer[" + index + "].rank"));
+                sorcerersList.add(sorcerData);
+                index++;
+            }
+            data.put("sorcerers", sorcerersList);
         }
         
-        Curse curse = new Curse();
-        curse.setName(data.get("curse.name"));
-        curse.setThreatLevel(data.get("curse.threatLevel"));
-        mission.setCurse(curse);
+      
+        if (firstData.containsKey("technique[0].name")) {
+            List<Map<String, Object>> techniquesList = new ArrayList<>();
+            int index = 0;
+            while (firstData.containsKey("technique[" + index + "].name")) {
+                Map<String, Object> techData = new HashMap<>();
+                techData.put("name", firstData.get("technique[" + index + "].name"));
+                techData.put("type", firstData.get("technique[" + index + "].type"));
+                techData.put("owner", firstData.get("technique[" + index + "].owner"));
+                String dmgStr = firstData.get("technique[" + index + "].damage");
+                if (dmgStr != null) {
+                    techData.put("damage", Integer.parseInt(dmgStr));
+                }
+                techniquesList.add(techData);
+                index++;
+            }
+            data.put("techniques", techniquesList);
+        }
         
-        mission.setSorcerers(createSorcerers(data));
-        mission.setTechniques(createTechniques(data));
+       
+        if (firstData.containsKey("weather") || firstData.containsKey("timeOfDay") || 
+            firstData.containsKey("visibility") || firstData.containsKey("cursedEnergyDensity")) {
+            
+            Map<String, String> envData = new HashMap<>();
+            if (firstData.containsKey("weather")) envData.put("weather", firstData.get("weather"));
+            if (firstData.containsKey("timeOfDay")) envData.put("timeOfDay", firstData.get("timeOfDay"));
+            if (firstData.containsKey("visibility")) envData.put("visibility", firstData.get("visibility"));
+            if (firstData.containsKey("cursedEnergyDensity")) {
+                envData.put("cursedEnergyDensity", firstData.get("cursedEnergyDensity"));
+            }
+            data.put("environment", envData);
+        }
         
+        MissionBuilder builder = new MissionBuilder();
+        fillPasrserFromBasic(builder, data);
         
-        return mission;
+        return builder.build();
     }
     
-    
-    private Map<String,String> fileToMapEdit(String filepath) throws IOException {
-        Map<String,String> data = new HashMap<>();
-        File file = new File(filepath);
-        Scanner scanner = new Scanner(file);
+    private Map<String, String> fileToMapEdit(String filepath) throws IOException {
+        Map<String, String> data = new HashMap<>();
+        String currentSection = "";
+        int sectionCounter = 0;
+        String previousSection = "";
         
-        while(scanner.hasNextLine()){
-            String line = scanner.nextLine().trim();
-            if(line.isEmpty()) continue;
-            
-            int del = line.indexOf(':');
-            if(del>0){
-                String key = line.substring(0,del).trim();
-                String value = line.substring(del + 1).trim();
-                data.put(key, value);
+        try (Scanner scanner = new Scanner(new File(filepath))) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine().trim();
+                if (line.isEmpty()) continue;
+                
+                if (line.startsWith("[") && line.endsWith("]")) {
+                    String newSection = line.substring(1, line.length() - 1).toLowerCase();
+                    
+                    if (newSection.equals(previousSection)) {
+                        sectionCounter++;
+                    } else {
+                        sectionCounter = 0;
+                    }
+                    previousSection = newSection;
+                    currentSection = newSection;
+                    continue;
+                }
+                
+                int eqIndex = line.indexOf('=');
+                if (eqIndex > 0) {
+                    String key = line.substring(0, eqIndex).trim();
+                    String value = line.substring(eqIndex + 1).trim();
+                    
+                    if (!currentSection.isEmpty() && !currentSection.equals("mission")) {
+                        if (sectionCounter > 0) {
+                            key = currentSection + "[" + sectionCounter + "]." + key;
+                        } else {
+                            key = currentSection + "." + key;
+                        }
+                    }
+                    data.put(key, value);
+                }
             }
         }
-        scanner.close();
         return data;
     }
-    
-    private List<Sorcer> createSorcerers(Map<String,String> data){
-        List<Sorcer> sorcerers = new ArrayList<>();
-        int index = 0;
-        
-        while(true){
-            String name = data.get("sorcerer[" + index + "].name");
-            if(name == null){
-                break;
-            }
-            
-            Sorcer s = new Sorcer();
-            s.setName(name);
-            s.setRank(data.get("sorcerer[" + index + "].rank"));
-            sorcerers.add(s);
-            index++;
-        }
-        return sorcerers;
-    }
-    
-    private List<Technique> createTechniques(Map<String,String> data){
-        List<Technique> techs = new ArrayList<>();
-        int index = 0;
-        
-        while(true){
-            String name = data.get("technique[" + index + "].name");
-            if(name == null){
-                break;
-            }
-            
-            Technique t = new Technique();
-            t.setName(name);
-            t.setOwner(data.get("technique[" + index + "].owner"));
-            t.setType(data.get("technique[" + index + "].type"));
-            String dmgStr = data.get("technique[" + index + "].damage");
-            if(dmgStr != null){
-                t.setDamage(Integer.parseInt(dmgStr));
-            }
-            techs.add(t);
-            index++;
-        }
-        return techs;
+
+    @Override
+    public String getExtension() {
+      return "txt";  
     }
     
 }

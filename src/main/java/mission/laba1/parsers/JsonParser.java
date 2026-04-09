@@ -7,19 +7,35 @@ package mission.laba1.parsers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import mission.laba1.missionanalyzer.Curse;
+import mission.laba1.missionanalyzer.EconomicAssessment;
 import mission.laba1.missionanalyzer.Mission;
+import mission.laba1.missionanalyzer.MissionBuilder;
+import mission.laba1.missionanalyzer.Sorcer;
+import mission.laba1.missionanalyzer.Technique;
 
 /**
  *
  * @author aleksandra
  */
-public class JsonParser implements MissionParser {
+public class JsonParser extends BasicParser {
     private ObjectMapper mapper = new ObjectMapper();
     
     @Override
     public Mission parse(String filepath) throws IOException{
-        File file = new File(filepath);
-        return mapper.readValue(file, Mission.class);
+       Map<String, Object> data = mapper.readValue(new File(filepath), Map.class);
+       MissionBuilder builder = new MissionBuilder();
+       
+       fillPasrserFromBasic(builder, data);
+       
+       return builder.build();
+    }
+
+    @Override
+    public String getExtension() {
+        return "json";
     }
     
 }

@@ -7,18 +7,31 @@ package mission.laba1.parsers;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import mission.laba1.missionanalyzer.Mission;
+import mission.laba1.missionanalyzer.MissionBuilder;
 
 /**
  *
  * @author aleksandra
  */
-public class XmlParser implements MissionParser{
+public class XmlParser extends BasicParser{
     private XmlMapper mapper = new XmlMapper();
     
+     @Override
+    public Mission parse(String filepath) throws IOException{
+       Map<String, Object> data = mapper.readValue(new File(filepath), Map.class);
+       if (data.containsKey("mission")) {
+            data = (Map<String, Object>) data.get("mission");
+        }
+       MissionBuilder builder = new MissionBuilder();
+       fillPasrserFromBasic(builder, data);
+       
+       return builder.build();
+    }
+
     @Override
-    public Mission parse(String filepath) throws IOException {
-       File file = new File(filepath);
-       return mapper.readValue(file, Mission.class);
+    public String getExtension() {
+        return "xml";
     }
 }

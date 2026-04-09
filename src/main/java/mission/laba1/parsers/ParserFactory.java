@@ -4,27 +4,39 @@
  */
 package mission.laba1.parsers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author aleksandra
  */
 public class ParserFactory {
+    private static Map<String, MissionParser> parsers = new HashMap<>();
+    
     public static MissionParser getParser(String filepath){
         int finalDot = filepath.lastIndexOf('.');
         String ext = "";
         if(finalDot>0){
             ext = filepath.substring(finalDot + 1).toLowerCase();
         }
-        
-        if(ext.equals("json")){
-            return new JsonParser();
-        } else if (ext.equals("xml")){
-            return new XmlParser();
-        } else if (ext.equals("txt")){
-            return new TxtParser();
+        if (finalDot == -1) {
+            // Нет расширения
+            return parsers.get("");
         }
+        return parsers.get(ext);
+    }
         
-        return null;
+    public static void addParser(String extension, MissionParser parser) {
+        parsers.put(extension, parser);
+    }
+    
+    public static void setup() {
+        parsers.put("json", new JsonParser());
+        parsers.put("xml", new XmlParser());
+        parsers.put("txt", new TxtParser());
+        parsers.put("yaml", new YamlParser());
+        parsers.put("", new NoExtensionParser());
     }
    
 }
