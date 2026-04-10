@@ -23,17 +23,12 @@ import org.yaml.snakeyaml.Yaml;
 public class YamlParser extends BasicParser{
 
     @Override
-    public Mission parse(String filepath) throws IOException {
-        
+    protected Map<String, Object> parseToMap(String filepath) throws IOException {
         Yaml yaml = new Yaml();
         try (InputStream input = new FileInputStream(filepath)) {
-            Map<String, Object> data = yaml.load(input);
-            MissionBuilder builder = new MissionBuilder();
-            fillPasrserFromBasic(builder, data);
-            return builder.build();
+            return yaml.load(input);
         }
     }
-
 
     @Override
     public String getExtension() {

@@ -4,6 +4,7 @@
  */
 package mission.laba1.parsers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Map;
 import mission.laba1.missionanalyzer.Curse;
 import mission.laba1.missionanalyzer.EconomicAssessment;
 import mission.laba1.missionanalyzer.EnvironmentConditions;
+import mission.laba1.missionanalyzer.Mission;
 import mission.laba1.missionanalyzer.MissionBuilder;
 import mission.laba1.missionanalyzer.Sorcer;
 import mission.laba1.missionanalyzer.Technique;
@@ -20,6 +22,15 @@ import mission.laba1.missionanalyzer.Technique;
  * @author aleksandra
  */
 public abstract class BasicParser implements MissionParser{
+    @Override
+    public Mission parse(MissionBuilder builder, String filepath) throws IOException {
+        Map<String, Object> data = parseToMap(filepath);
+        fillPasrserFromBasic(builder, data);
+        return builder.build();
+    }
+    
+    protected abstract Map<String, Object> parseToMap(String filepath) throws IOException;
+    
     protected void fillPasrserFromBasic(MissionBuilder builder, Map<String, Object> data) {
         //обязательные поля
         builder.setMissionId(getStringValue(data.get("missionId")))

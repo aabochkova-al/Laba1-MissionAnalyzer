@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import mission.laba1.missionanalyzer.Mission;
+import mission.laba1.missionanalyzer.MissionBuilder;
 import mission.laba1.parsers.MissionParser;
 import mission.laba1.parsers.ParserFactory;
 import mission.laba1.reports.Formatter;
@@ -47,10 +48,11 @@ public class Facade {
     
     public Mission analyzeMission(String filepath) throws IOException {
         MissionParser parser = ParserFactory.getParser(filepath);
+        MissionBuilder builder = new MissionBuilder();
         
         System.out.println("Парсер: " + parser.getClass().getSimpleName());
         
-        Mission mission = parser.parse(filepath);
+        Mission mission = parser.parse(builder, filepath);
         mission.validateOrThrow();
         
         return mission;

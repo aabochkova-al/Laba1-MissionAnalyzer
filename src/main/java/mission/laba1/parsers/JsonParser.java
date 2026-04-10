@@ -24,13 +24,8 @@ public class JsonParser extends BasicParser {
     private ObjectMapper mapper = new ObjectMapper();
     
     @Override
-    public Mission parse(String filepath) throws IOException{
-       Map<String, Object> data = mapper.readValue(new File(filepath), Map.class);
-       MissionBuilder builder = new MissionBuilder();
-       
-       fillPasrserFromBasic(builder, data);
-       
-       return builder.build();
+    protected Map<String, Object> parseToMap(String filepath) throws IOException{
+      return mapper.readValue(new File(filepath), Map.class);
     }
 
     @Override

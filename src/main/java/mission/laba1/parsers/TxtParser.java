@@ -22,24 +22,27 @@ import mission.laba1.missionanalyzer.Technique;
  * @author aleksandra
  */
 public class TxtParser extends BasicParser{
-
     @Override
-    public Mission parse(String filepath) throws IOException {
-        Map<String,String> firstData = fileToMapEdit(filepath);
+    protected Map<String, Object> parseToMap(String filepath) throws IOException {
+        Map<String, String> firstData = fileToMapEdit(filepath);
+        return convertion(firstData);
+    }
+
+    private Map<String, Object> convertion(Map<String, String> firstData){
+         Map<String, Object> result = new HashMap<>();
         
 //        System.out.println("DEBUG: Распарсенные данные:");
 //        for (Map.Entry<String, String> entry : firstData.entrySet()) {
 //            System.out.println("  " + entry.getKey() + " = " + entry.getValue());
 //        }
         
-        Map<String, Object> data = new HashMap<>();
-        if (firstData.containsKey("missionId")) data.put("missionId", firstData.get("missionId"));
-        if (firstData.containsKey("date")) data.put("date", firstData.get("date"));
-        if (firstData.containsKey("location")) data.put("location", firstData.get("location"));
-        if (firstData.containsKey("outcome")) data.put("outcome", firstData.get("outcome"));
+        if (firstData.containsKey("missionId")) result.put("missionId", firstData.get("missionId"));
+        if (firstData.containsKey("date")) result.put("date", firstData.get("date"));
+        if (firstData.containsKey("location")) result.put("location", firstData.get("location"));
+        if (firstData.containsKey("outcome")) result.put("outcome", firstData.get("outcome"));
         if (firstData.containsKey("damageCost")) {
             try {
-                data.put("damageCost", Integer.parseInt(firstData.get("damageCost")));
+                result.put("damageCost", Integer.parseInt(firstData.get("damageCost")));
             } catch (NumberFormatException e) {}
         }
         
@@ -51,7 +54,7 @@ public class TxtParser extends BasicParser{
             if (firstData.containsKey("curse[0].threatLevel")) {
                 curseData.put("threatLevel", firstData.get("curse[0].threatLevel"));
             }
-            data.put("curse", curseData);
+            result.put("curse", curseData);
         }
         
         List<Map<String, String>> sorcerersList = new ArrayList<>();
@@ -66,7 +69,7 @@ public class TxtParser extends BasicParser{
             sorcererIndex++;
         }
         if (!sorcerersList.isEmpty()) {
-            data.put("sorcerers", sorcerersList);
+            result.put("sorcerers", sorcerersList);
         }
         
       
@@ -91,7 +94,7 @@ public class TxtParser extends BasicParser{
             techniqueIndex++;
         }
         if (!techniquesList.isEmpty()) {
-            data.put("techniques", techniquesList);
+            result.put("techniques", techniquesList);
         }
         
        
@@ -105,13 +108,10 @@ public class TxtParser extends BasicParser{
             if (firstData.containsKey("environment[0].cursedEnergyDensity")) {
                 envData.put("cursedEnergyDensity", firstData.get("environment[0].cursedEnergyDensity"));
             }
-            data.put("environment", envData);
+            result.put("environment", envData);
         }
         
-        MissionBuilder builder = new MissionBuilder();
-        fillPasrserFromBasic(builder, data);
-        
-        return builder.build();
+        return result;
     }
     
     private Map<String, String> fileToMapEdit(String filepath) throws IOException {
