@@ -32,23 +32,36 @@ public abstract class BasicParser implements MissionParser{
     protected abstract Map<String, Object> parseToMap(String filepath) throws IOException;
     
     protected void fillPasrserFromBasic(MissionBuilder builder, Map<String, Object> data) {
+        setRequiredFields(builder, data);
+        setCurse(builder, data);
+        setDamageCost(builder, data);
+        setSorcerers(builder, data);
+        setTechniques(builder, data);
+        setEconomicAssessment(builder, data);
+        setEnvironment(builder, data);
+    }
         //обязательные поля
+    private void setRequiredFields(MissionBuilder builder, Map<String, Object> data) {
         builder.setMissionId(getStringValue(data.get("missionId")))
                .setDate(getStringValue(data.get("date")))
                .setLocation(getStringValue(data.get("location")))
                .setOutcome(getStringValue(data.get("outcome")));
+    }
        //проклятие
-       if(data.containsKey("curse")){
+    private void setCurse(MissionBuilder builder, Map<String, Object> data) {
+       if (!data.containsKey("curse")) return;
            Map<String, String> curseData = (Map) data.get("curse");
            Curse curse = new Curse();
            curse.setName(curseData.get("name"));
            curse.setThreatLevel(curseData.get("threatLevel"));
            builder.setCurse(curse);
-       }
+    }
        //damageCost
-        if (data.containsKey("damageCost")) {
-            Object cost = data.get("damageCost");
-            if (cost instanceof Integer) {
+    private void setDamageCost(MissionBuilder builder, Map<String, Object> data) {
+        if (!data.containsKey("damageCost")) return;
+            
+        Object cost = data.get("damageCost");
+        if (cost instanceof Integer) {
                 builder.setDamageCost((Integer) cost);
             } else if (cost instanceof String) {
                 try {
@@ -57,10 +70,11 @@ public abstract class BasicParser implements MissionParser{
                     System.out.println("Ошибка парсинга damageCost: " + cost);
                 }
             }
-        }
+    }
         
-       //участники - универсальная версия
-        if (data.containsKey("sorcerers")) {
+       //участники
+    private void setSorcerers(MissionBuilder builder, Map<String, Object> data) {
+        if (!data.containsKey("sorcerers")) return;
             Object sorcerersObj = data.get("sorcerers");
             List<Map<String, String>> sorcerersList = new ArrayList<>();
 
@@ -96,10 +110,11 @@ public abstract class BasicParser implements MissionParser{
                 sorcer.setRank(s.get("rank"));
                 builder.addSorcerer(sorcer);
             }
-        }
+    }
         
-       //техники - универсальная версия
-        if (data.containsKey("techniques")) {
+       //техники
+    private void setTechniques(MissionBuilder builder, Map<String, Object> data) {
+        if (!data.containsKey("techniques")) return;
             Object techniquesObj = data.get("techniques");
             List<Map<String, Object>> techniquesList = new ArrayList<>();
 
@@ -142,10 +157,11 @@ public abstract class BasicParser implements MissionParser{
                 }
                 builder.addTechnique(tech);
             }
-        }
+     }
         
        //экономическая оценка
-        if (data.containsKey("economicAssessment")) {
+    private void setEconomicAssessment(MissionBuilder builder, Map<String, Object> data) {
+        if (!data.containsKey("economicAssessment")) return;
             Map<String, Object> econ = (Map) data.get("economicAssessment");
             EconomicAssessment assessment = new EconomicAssessment();
             if (econ.containsKey("totalDamageCost"))
@@ -161,10 +177,11 @@ public abstract class BasicParser implements MissionParser{
             if (econ.containsKey("insuranceCovered"))
                 assessment.setInsuranceCovered((Boolean) econ.get("insuranceCovered"));
             builder.setEconomicAssessment(assessment);
-        }
+    }
         
         //условия среды
-        if (data.containsKey("environment")) {
+    private void setEnvironment(MissionBuilder builder, Map<String, Object> data) {
+        if (!data.containsKey("environment")) return;
             Map<String, Object> envData = (Map) data.get("environment");
             EnvironmentConditions env = new EnvironmentConditions();
             
@@ -186,7 +203,7 @@ public abstract class BasicParser implements MissionParser{
             }
             builder.setEnvironment(env);
         }
-    }
+    
     
     protected String getStringValue(Object obj) {
         if (obj == null) return null;

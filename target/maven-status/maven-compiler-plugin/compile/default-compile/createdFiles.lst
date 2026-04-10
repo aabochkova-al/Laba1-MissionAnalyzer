@@ -5,6 +5,7 @@ mission/laba1/ENUM/EscalationRisk.class
 mission/laba1/ENUM/Weather.class
 mission/laba1/missionanalyzer/Technique.class
 mission/laba1/missionanalyzer/EconomicAssessment.class
+mission/laba1/missionanalyzer/MissionValidator.class
 mission/laba1/parsers/NoExtensionParser.class
 mission/laba1/parsers/BasicParser.class
 mission/laba1/missionanalyzer/EnvironmentConditions.class

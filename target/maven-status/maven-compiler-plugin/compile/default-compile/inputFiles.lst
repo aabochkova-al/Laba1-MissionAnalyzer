@@ -3,6 +3,7 @@
 /Users/aleksandra/NetBeansProjects/Laba1-MissionAnalyzer/src/main/java/mission/laba1/parsers/TxtParser.java
 /Users/aleksandra/NetBeansProjects/Laba1-MissionAnalyzer/src/main/java/mission/laba1/parsers/ParserFactory.java
 /Users/aleksandra/NetBeansProjects/Laba1-MissionAnalyzer/src/main/java/mission/laba1/parsers/XmlParser.java
+/Users/aleksandra/NetBeansProjects/Laba1-MissionAnalyzer/src/main/java/mission/laba1/missionanalyzer/MissionValidator.java
 /Users/aleksandra/NetBeansProjects/Laba1-MissionAnalyzer/src/main/java/mission/laba1/missionanalyzer/EconomicAssessment.java
 /Users/aleksandra/NetBeansProjects/Laba1-MissionAnalyzer/src/main/java/mission/laba1/ENUM/Outcome.java
 /Users/aleksandra/NetBeansProjects/Laba1-MissionAnalyzer/src/main/java/mission/laba1/parsers/BasicParser.java

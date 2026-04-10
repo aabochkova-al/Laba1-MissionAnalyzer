@@ -4,6 +4,7 @@
  */
 package mission.laba1.facade;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import mission.laba1.missionanalyzer.Mission;
 import mission.laba1.missionanalyzer.MissionBuilder;
+import mission.laba1.missionanalyzer.MissionValidator;
 import mission.laba1.parsers.MissionParser;
 import mission.laba1.parsers.ParserFactory;
 import mission.laba1.reports.Formatter;
@@ -53,10 +55,38 @@ public class Facade {
         System.out.println("Парсер: " + parser.getClass().getSimpleName());
         
         Mission mission = parser.parse(builder, filepath);
-        mission.validateOrThrow();
+        new MissionValidator().validate(mission);
         
         return mission;
     }
+    
+    public List<Mission> analyzeFolder(String folderPath) {
+        List<Mission> missions = new ArrayList<>();
+        File folder = new File(folderPath);
+
+        if (!folder.exists() || !folder.isDirectory()) {
+            System.out.println("Папка не найдена: " + folderPath);
+            return missions;
+        }
+
+        File[] files = folder.listFiles();
+        if (files == null) return missions;
+
+        System.out.println("\nСканирование папки...");
+        int fileCount = 0;
+
+        for (File file : files) {
+            if (file.isFile()) {
+                fileCount++;
+                try {
+                    Mission mission = analyzeMission(file.getAbsolutePath());
+                    missions.add(mission);
+                } catch (Exception e) {}
+            }
+        }
+        return missions;
+    }
+
     
     public void printReport(Mission mission) {
         printReport(mission, defaultFormatName);

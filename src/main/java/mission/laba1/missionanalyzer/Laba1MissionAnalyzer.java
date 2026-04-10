@@ -5,6 +5,7 @@
 package mission.laba1.missionanalyzer;
 
 import java.io.File;
+import java.util.List;
 import java.util.Scanner;
 import mission.laba1.facade.Facade;
 import mission.laba1.parsers.MissionParser;
@@ -30,7 +31,7 @@ public class Laba1MissionAnalyzer {
         
 
         while(true){
-            System.out.println("\nВведите путь к файлу для анализа: ");
+            System.out.println("\nВведите путь: ");
             String filepath = scanner.nextLine().trim();
 
             if(filepath.equals("exit")){
@@ -45,21 +46,47 @@ public class Laba1MissionAnalyzer {
 
             File file = new File(filepath); 
             if(!file.exists()){
-                System.out.println("Файл не найден");
+                System.out.println("Путь не существует!");
                 continue;
             }
-            
-           try {
-                Mission mission = facade.analyzeMission(filepath);
-                System.out.println("Данные миссии валидны");
-                facade.printReport(mission);
-            } catch (Exception e) {
-                System.out.println("Ошибка: " + e.getMessage());
+            if (file.isFile()) {
+                // Обрабатываем один файл
+                processSingleFile(facade, file);
+            } 
+            else if (file.isDirectory()) {
+                // Обрабатываем папку
+                processFolder(facade, file, scanner);
             }
-        }
-        
+
+        } 
         System.out.println("\nРабота завершена!");
         scanner.close();
+    }
+        
+    private static void processSingleFile(Facade facade, File file) {
+        try {
+            Mission mission = facade.analyzeMission(file.getAbsolutePath());
+            System.out.println("Данные миссии валидны");
+            facade.printReport(mission);
+        } catch (Exception e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+    }
+    
+    private static void processFolder(Facade facade, File folder, Scanner scanner) {
+        System.out.println("\nОбработка папки: " + folder.getName() );
+        
+        List<Mission> missions = facade.analyzeFolder(folder.getAbsolutePath());
+        
+        if (missions.isEmpty()) {
+            System.out.println("В папке не найдено файлов для анализа");
+            return;
+        }
+        for (int i = 0; i < missions.size(); i++) {
+            System.out.println("\n--- Миссия " + (i + 1) + " ---");
+            facade.printReport(missions.get(i));
+        }
+        
     }
     
 }

@@ -77,8 +77,8 @@ public class MissionBuilder {
         return this;
     }
     
-    public MissionBuilder addExtension(String key, Object value) {
-        mission.addExtension(key, value);
+    public MissionBuilder addAdds(String key, Object value) {
+        mission.addAdds(key, value);
         return this;
     }
     

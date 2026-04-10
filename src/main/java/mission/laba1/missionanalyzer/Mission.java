@@ -29,7 +29,7 @@ public class Mission {
     private EconomicAssessment economicAssessment;
     private EnvironmentConditions environment;
     
-    private Map<String, Object> extensions = new HashMap<>();
+    private Map<String, Object> adds = new HashMap<>();
     
     public Mission(){
         this.sorcerers = new ArrayList<>();
@@ -67,12 +67,12 @@ public class Mission {
     public EnvironmentConditions getEnvironment() { return environment; }
     public void setEnvironment(EnvironmentConditions environment) { this.environment = environment; }
     
-    public Map<String, Object> getExtensions() { return extensions; }
+    public Map<String, Object> getExtensions() { return adds; }
     public void setExtensions(Map<String, Object> extensions) {
-        this.extensions = extensions;
+        this.adds = extensions;
     }
-    public void addExtension(String key, Object value) {
-        extensions.put(key, value);
+    public void addAdds(String key, Object value) {
+        adds.put(key, value);
     }
     
     public String getNotes() { return notes; }
@@ -81,55 +81,5 @@ public class Mission {
     @JsonSetter("comment")
     public void setComment(String comment){
         this.notes=comment;
-    }
-    
-    public void validateOrThrow() throws IllegalStateException{
-        if (missionId == null || missionId.isEmpty()){
-            throw new IllegalStateException("missionId обязателен!");
-        }
-        if (date == null || date.isEmpty()){ 
-            throw new IllegalStateException("date обязателен!");
-        }
-        if (location == null || location.isEmpty()){ 
-            throw new IllegalStateException("location обязателен!");
-        }
-        if (outcome == Outcome.UNKNOWN){ 
-            throw new IllegalStateException("outcome обязателен!");
-        }
-        if (curse == null){
-            throw new IllegalStateException("curse обязателен!");
-        }
-        // Проверка: есть техники, но нет магов и что владелец техники есть в списке участников
-        if ((techniques != null && !techniques.isEmpty()) && 
-            (sorcerers == null || sorcerers.isEmpty())) {
-            throw new IllegalStateException("Миссия содержит техники, но не содержит магов!");
-        }
-        
-        if (techniques != null && sorcerers != null) {
-            List<Technique> validTechniques = new ArrayList<>();
-            List<String> errors = new ArrayList<>();
-            for (Technique t : techniques) {
-                boolean ownerFound = false;
-                for (Sorcer s : sorcerers) {
-                    if (s.getName().equals(t.getOwner())) {
-                        ownerFound = true;
-                        break;
-                    }
-                }
-                if  (ownerFound) {
-                    validTechniques.add(t); // оставляем только валидные техники
-                } else {
-                    errors.add("Техника '" + t.getName() + "' (владелец: " + t.getOwner() + ") пропущена - владелец не найден");
-                }
-            }
-            this.techniques = validTechniques;
-            if (!errors.isEmpty()) {
-                System.out.println("\nПредупреждение: ");
-                for (String error : errors) {
-                    System.out.println("  - " + error);
-                }
-                System.out.println();
-            }
-        } 
     }
 }
